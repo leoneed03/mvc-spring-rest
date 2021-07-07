@@ -12,7 +12,7 @@ public class Repo implements PersonRepository {
     private final NavigableMap<Long, Person> users = new TreeMap<>();
 
     @Override
-    public Optional<PersonEntry> findByUserId(Long userId) {
+    public Optional<PersonEntry> findByUserId(final Long userId) {
 
         if (users.containsKey(userId)) {
 
@@ -60,7 +60,7 @@ public class Repo implements PersonRepository {
     }
 
     @Override
-    public PersonEntry updateUserById(Long userId, final Person user) {
+    public PersonEntry updateUserById(final Long userId, final Person user) {
 
         Person personUpdated = users.put(userId, user);
 

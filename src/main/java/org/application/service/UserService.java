@@ -46,7 +46,7 @@ public class UserService {
         return userRepository.saveUser(user);
     }
 
-    public PersonEntry getUser(Long userId) throws UserNotFoundException, EmptyIdException {
+    public PersonEntry getUser(final Long userId) throws UserNotFoundException, EmptyIdException {
 
         if (userId == null) {
             throw new EmptyIdException(userServiceMessageHelper.getNullIdMessage());
@@ -54,25 +54,22 @@ public class UserService {
 
         Optional<PersonEntry> optionalPerson = userRepository.findByUserId(userId);
 
-        PersonEntry personById = optionalPerson.orElseThrow(
+        return optionalPerson.orElseThrow(
                 () -> new UserNotFoundException(userServiceMessageHelper.getUserNotFound(userId))
         );
-
-        return personById;
     }
 
-    public PersonEntry deleteUser(Long userId) throws UserNotFoundException, EmptyIdException {
+    public PersonEntry deleteUser(final Long userId) throws UserNotFoundException, EmptyIdException {
 
         if (userId == null) {
             throw new EmptyIdException(userServiceMessageHelper.getNullIdMessage());
         }
 
         Optional<PersonEntry> optionalPerson = userRepository.deleteUserById(userId);
-        PersonEntry personDeleted = optionalPerson.orElseThrow(
+
+        return optionalPerson.orElseThrow(
                 () -> new UserNotFoundException(userServiceMessageHelper.getUserNotFound(userId))
         );
-
-        return personDeleted;
     }
 
     public PersonEntry updateUser(final Long userId,
