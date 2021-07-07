@@ -31,6 +31,7 @@ public class UserController {
         try {
             PersonEntry savedUser = userService.saveUser(user);
 
+            //TODO: return created status
             return ResponseEntity.ok().body(savedUser);
 
         } catch (EmptyUserException | InvalidUserParametersException userException) {
