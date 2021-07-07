@@ -15,5 +15,5 @@ public interface PersonRepository {
 
     Optional<PersonEntry> deleteUserById(Long userId);
 
-    Optional<PersonEntry> updateUserById(Long userId, Person user);
+    PersonEntry updateUserById(Long userId, Person user);
 }

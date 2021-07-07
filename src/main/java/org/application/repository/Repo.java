@@ -4,15 +4,12 @@ import org.application.entity.Person;
 import org.application.entity.PersonEntry;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class Repo implements PersonRepository {
-    private final Map<Long, Person> users = new LinkedHashMap<>();
+    private final NavigableMap<Long, Person> users = new TreeMap<>();
 
     @Override
     public Optional<PersonEntry> findByUserId(Long userId) {
@@ -28,7 +25,14 @@ public class Repo implements PersonRepository {
 
     @Override
     public PersonEntry saveUser(final Person person) {
-        long idToPut = users.size();
+        Long idFound = users.lowerKey(Long.MAX_VALUE);
+
+        if (idFound == null) {
+            idFound = (long) -1;
+        }
+
+        Long idToPut = idFound + 1;
+
         users.put(idToPut, person);
 
         return new PersonEntry(idToPut, person);
@@ -56,14 +60,11 @@ public class Repo implements PersonRepository {
     }
 
     @Override
-    public Optional<PersonEntry> updateUserById(Long userId, final Person user) {
-        if (users.containsKey(userId)) {
-            Person personUpdated = users.put(userId, user);
+    public PersonEntry updateUserById(Long userId, final Person user) {
 
-            return Optional.of(new PersonEntry(userId, personUpdated));
-        } else {
+        Person personUpdated = users.put(userId, user);
 
-            return Optional.empty();
-        }
+        return new PersonEntry(userId, personUpdated);
+
     }
 }

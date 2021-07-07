@@ -90,12 +90,6 @@ public class UserService {
             throw new InvalidUserParametersException(userServiceMessageHelper.getInvalidUserParameters());
         }
 
-        Optional<PersonEntry> updatedPersonEntry = userRepository.updateUserById(userId, user);
-
-        PersonEntry personUpdated = updatedPersonEntry.orElseThrow(
-                () -> new UserNotFoundException(userServiceMessageHelper.getUserNotFound(userId))
-        );
-
-        return personUpdated;
+        return userRepository.updateUserById(userId, user);
     }
 }
