@@ -14,9 +14,13 @@ public class PersonValidator {
                 && user.getAge() >= 0;
     }
 
+    public boolean isUserValidNoId(UserData user) {
+        return user.getId() == null
+                && isUserValid(user);
+    }
+
     public boolean isUserValid(UserData user) {
-        return user.getEmail() != null
-                && user.getName() != null
-                && user.getId() >= 0;
+        return user.getName() != null
+                && user.getEmail() != null;
     }
 }

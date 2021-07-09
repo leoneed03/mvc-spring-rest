@@ -3,10 +3,7 @@ package org.application.controller;
 import org.application.dao.UserDao;
 import org.application.entity.Person;
 import org.application.entity.PersonEntry;
-import org.application.exceptions.EmptyIdException;
-import org.application.exceptions.EmptyUserException;
-import org.application.exceptions.InvalidUserParametersException;
-import org.application.exceptions.UserNotFoundException;
+import org.application.exceptions.*;
 import org.application.model.UserData;
 import org.application.response.MessageResponse;
 import org.application.service.UserService;
@@ -49,7 +46,7 @@ public class UserController {
 
     @PostMapping("/data")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveUser(@RequestBody UserData user) {
+    public void saveUser(@RequestBody UserData user) throws UserException {
 
         repo.save(user);
     }
