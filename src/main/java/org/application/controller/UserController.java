@@ -7,10 +7,11 @@ import org.application.exceptions.EmptyIdException;
 import org.application.exceptions.EmptyUserException;
 import org.application.exceptions.InvalidUserParametersException;
 import org.application.exceptions.UserNotFoundException;
-import org.application.model.User;
+import org.application.model.UserData;
 import org.application.response.MessageResponse;
 import org.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,13 @@ public class UserController {
             return ResponseEntity.badRequest().body(new MessageResponse(userException.getMessage()));
         }
 
+    }
+
+    @PostMapping("/data")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveUser(@RequestBody UserData user) {
+
+        repo.save(user);
     }
 
     @DeleteMapping("/{id}")
@@ -100,12 +108,15 @@ public class UserController {
     @GetMapping("/list")
     public ResponseEntity<?> getAllUsersHibernate() {
 
-        User user = new User();
-        user.setName("LEO");
-        user.setEmail("leo@mail.ru");
+//        UserData user = new UserData();
+//        user.setName("LEO1");
+//        user.setEmail("leo1@mail.ru");
+//
+//        repo.save(user);
+        System.out.println("all user to show");
+        List<UserData> allUsers = repo.list();
 
-        repo.save(user);
-        List<User> allUsers = repo.list();
+        System.out.println(allUsers);
 
         return ResponseEntity.ok(allUsers);
     }

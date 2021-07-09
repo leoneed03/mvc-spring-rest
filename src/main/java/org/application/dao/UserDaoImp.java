@@ -1,7 +1,7 @@
 package org.application.dao;
 
 
-import org.application.model.User;
+import org.application.model.UserData;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,15 +18,15 @@ public class UserDaoImp implements UserDao {
 
     @Transactional
     @Override
-    public void save(User user) {
+    public void save(UserData user) {
         sessionFactory.getCurrentSession().save(user);
     }
 
     @Transactional
     @Override
-    public List<User> list() {
+    public List<UserData> list() {
         @SuppressWarnings("unchecked")
-        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User");
+        TypedQuery<UserData> query = sessionFactory.getCurrentSession().createQuery("from UserData");
         return query.getResultList();
     }
 
