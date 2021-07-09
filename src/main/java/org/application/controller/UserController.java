@@ -1,11 +1,13 @@
 package org.application.controller;
 
+import org.application.dao.UserDao;
 import org.application.entity.Person;
 import org.application.entity.PersonEntry;
 import org.application.exceptions.EmptyIdException;
 import org.application.exceptions.EmptyUserException;
 import org.application.exceptions.InvalidUserParametersException;
 import org.application.exceptions.UserNotFoundException;
+import org.application.model.User;
 import org.application.response.MessageResponse;
 import org.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
+    @Autowired
+    UserDao repo;
 
     @Autowired
     public UserController(final UserService userService) {
@@ -88,6 +93,19 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
 
         List<PersonEntry> allUsers = userService.getAll();
+
+        return ResponseEntity.ok(allUsers);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getAllUsersHibernate() {
+
+        User user = new User();
+        user.setName("LEO");
+        user.setEmail("leo@mail.ru");
+
+        repo.save(user);
+        List<User> allUsers = repo.list();
 
         return ResponseEntity.ok(allUsers);
     }
