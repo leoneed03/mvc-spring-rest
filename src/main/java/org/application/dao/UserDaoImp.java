@@ -1,9 +1,6 @@
 package org.application.dao;
 
-
-import org.application.exceptions.UserException;
 import org.application.model.UserData;
-import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,6 +44,24 @@ public class UserDaoImp implements UserDao {
         UserData userDataFound = sessionFactory.getCurrentSession().get(UserData.class, id);
 
         return Optional.ofNullable(userDataFound);
+    }
+
+    @Transactional
+    @Override
+    public Optional<UserData> updateIfPresent(Long id, UserData user) {
+
+        user.setId(id);
+
+        UserData userDataFound = sessionFactory.getCurrentSession().get(UserData.class, id);
+
+        if (userDataFound != null) {
+            userDataFound.setEmail(user.getEmail());
+            userDataFound.setName(user.getName());
+
+            return Optional.of(user);
+        }
+
+        return Optional.empty();
     }
 
 }

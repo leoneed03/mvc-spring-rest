@@ -14,4 +14,6 @@ public interface UserDao {
     void delete(Long id);
 
     Optional<UserData> get(Long id);
+
+    Optional<UserData> updateIfPresent(Long id, UserData user);
 }

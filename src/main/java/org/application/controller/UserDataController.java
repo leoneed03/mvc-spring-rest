@@ -41,6 +41,28 @@ public class UserDataController {
         return userStorageService.saveUser(user);
     }
 
+    @PutMapping("/{id}")
+    public UserData updateUser(@PathVariable("id") Long userId,
+                               @RequestBody UserData user) throws UserException {
+
+        if (user == null) {
+            throw new UserException(
+                    userServiceMessageHelper.getNullUserMessage(),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        if (!personValidator.isUserValidNoId(user)) {
+            throw new UserException(
+                    userServiceMessageHelper.getInvalidUserParameters(),
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        return userStorageService.updateIfPresent(userId, user).orElseThrow(
+                () -> new UserException(userServiceMessageHelper.getUserNotFound(userId),
+                        HttpStatus.BAD_REQUEST)
+        );
+    }
+
     @GetMapping("/")
     public List<UserData> getAllUsers() {
         return userStorageService.getAllUsers();
@@ -64,11 +86,9 @@ public class UserDataController {
             System.out.println("EMPTY OPTIONAL");
         }
 
-        UserData userData = userDataFound.orElseThrow(
+        return userDataFound.orElseThrow(
                 () -> new UserException(userServiceMessageHelper.getUserNotFound(userId),
-                        HttpStatus.NO_CONTENT)
+                        HttpStatus.BAD_REQUEST)
         );
-
-        return userData;
     }
 }

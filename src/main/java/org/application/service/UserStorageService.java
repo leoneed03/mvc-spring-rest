@@ -1,7 +1,6 @@
 package org.application.service;
 
 import org.application.dao.UserDao;
-import org.application.entity.PersonValidator;
 import org.application.model.UserData;
 import org.application.response.IdResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +28,9 @@ public class UserStorageService {
 
     public Optional<UserData> getById(final Long id) {
         return repo.get(id);
+    }
+
+    public Optional<UserData> updateIfPresent(final Long id, final UserData user) {
+        return repo.updateIfPresent(id, user);
     }
 }
