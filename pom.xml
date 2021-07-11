@@ -80,6 +80,13 @@
       <version>${hibernate.version}</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.23</version>
+    </dependency>
+
     <!-- Hibernate-C3P0 Integration -->
     <dependency>
       <groupId>org.hibernate</groupId>
