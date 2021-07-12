@@ -30,9 +30,10 @@ public class UserDataController {
         this.userServiceMessageHelper = userServiceMessageHelper;
     }
 
+    //return whole user
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public IdResponse saveUser(@RequestBody UserData user) throws UserException {
+    public UserData saveUser(@RequestBody UserData user) throws UserException {
 
         if (user == null) {
 
@@ -53,11 +54,13 @@ public class UserDataController {
 
         } catch (ValidationException constraintViolationException) {
 
-            throw new UserException(userServiceMessageHelper.getInvalidUserParameters(),
+            throw new UserException(userServiceMessageHelper.getInvalidUserParameters()
+                    + ":\n" + constraintViolationException.getMessage(),
                     HttpStatus.BAD_REQUEST);
         }
     }
 
+    //return updated user
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateUser(@PathVariable("id") Long userId,
@@ -93,7 +96,8 @@ public class UserDataController {
 
         } catch (ValidationException constraintViolationException) {
 
-            throw new UserException(userServiceMessageHelper.getInvalidUserParameters(),
+            throw new UserException(userServiceMessageHelper.getInvalidUserParameters()
+                    + ":\n" + constraintViolationException.getMessage(),
                     HttpStatus.BAD_REQUEST);
         }
     }
@@ -103,6 +107,7 @@ public class UserDataController {
         return userStorageService.getAllUsers();
     }
 
+    //no content -- empty inside
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable("id") Long userId) throws UserException {
@@ -117,6 +122,7 @@ public class UserDataController {
 
         if (!userWasFound) {
 
+            //return not found or no content
             throw new UserException(userServiceMessageHelper.getUserNotFound(userId),
                     HttpStatus.BAD_REQUEST);
         }

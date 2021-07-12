@@ -10,8 +10,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public class UserDataRepoSql implements UserDataRepo {
+//@Repository
+public class UserDataRepoSql {
 
     private final SessionFactory sessionFactory;
 
@@ -21,13 +21,13 @@ public class UserDataRepoSql implements UserDataRepo {
     }
 
     @Transactional
-    @Override
+//    @Override
     public Long save(UserData user) {
         return (Long) sessionFactory.getCurrentSession().save(user);
     }
 
     @Transactional
-    @Override
+//    @Override
     public List<UserData> list() {
         @SuppressWarnings("unchecked")
         TypedQuery<UserData> query = sessionFactory.getCurrentSession().createQuery("from UserData");
@@ -36,7 +36,7 @@ public class UserDataRepoSql implements UserDataRepo {
     }
 
     @Transactional
-    @Override
+//    @Override
     public boolean delete(Long id) {
 
         UserData userDataFound = sessionFactory.getCurrentSession().get(UserData.class, id);
@@ -54,7 +54,7 @@ public class UserDataRepoSql implements UserDataRepo {
     }
 
     @Transactional
-    @Override
+//    @Override
     public Optional<UserData> get(Long id) {
 
         UserData userDataFound = sessionFactory.getCurrentSession().get(UserData.class, id);
@@ -63,7 +63,7 @@ public class UserDataRepoSql implements UserDataRepo {
     }
 
     @Transactional
-    @Override
+//    @Override
     public Optional<UserData> updateIfPresent(Long id,
                                               UserData user) {
 
