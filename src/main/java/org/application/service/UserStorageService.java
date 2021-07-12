@@ -22,8 +22,8 @@ public class UserStorageService {
         return repo.list();
     }
 
-    public void deleteById(final Long id) {
-        repo.delete(id);
+    public boolean deleteById(final Long id) {
+        return repo.delete(id);
     }
 
     public Optional<UserData> getById(final Long id) {

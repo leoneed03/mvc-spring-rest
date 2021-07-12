@@ -13,6 +13,10 @@ public class UserServiceMessageHelper {
         return "provided user is null";
     }
 
+    public String getViolationMessage() {
+        return "provided user violates constraints";
+    }
+
     public String getUserNotFound(Long userId) {
         return "user not found by id: " + userId;
     }

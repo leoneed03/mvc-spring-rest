@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,12 +40,21 @@ public class UserDataController {
                     HttpStatus.BAD_REQUEST);
         }
 
-        return userStorageService.saveUser(user);
+        try {
+
+            return userStorageService.saveUser(user);
+
+        } catch (ValidationException constraintViolationException) {
+
+            throw new UserException(constraintViolationException.getMessage(),
+                    HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
-    public UserData updateUser(@PathVariable("id") Long userId,
-                               @RequestBody UserData user) throws UserException {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateUser(@PathVariable("id") Long userId,
+                           @RequestBody UserData user) throws UserException {
 
         if (user == null) {
             throw new UserException(
@@ -52,15 +63,24 @@ public class UserDataController {
         }
 
         if (!personValidator.isUserValidNoId(user)) {
+
             throw new UserException(
                     userServiceMessageHelper.getInvalidUserParameters(),
                     HttpStatus.BAD_REQUEST);
         }
 
-        return userStorageService.updateIfPresent(userId, user).orElseThrow(
-                () -> new UserException(userServiceMessageHelper.getUserNotFound(userId),
-                        HttpStatus.BAD_REQUEST)
-        );
+        try {
+
+            userStorageService.updateIfPresent(userId, user).orElseThrow(
+                    () -> new UserException(userServiceMessageHelper.getUserNotFound(userId),
+                            HttpStatus.BAD_REQUEST)
+            );
+
+        } catch (ValidationException constraintViolationException) {
+
+            throw new UserException(constraintViolationException.getMessage(),
+                    HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/")
@@ -70,21 +90,20 @@ public class UserDataController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable("id") Long userId) {
-        userStorageService.deleteById(userId);
+    public void deleteUser(@PathVariable("id") Long userId) throws UserException {
+
+        boolean userWasFound = userStorageService.deleteById(userId);
+
+        if (!userWasFound) {
+            throw new UserException(userServiceMessageHelper.getUserNotFound(userId),
+                    HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/{id}")
     public UserData getUser(@PathVariable("id") Long userId) throws UserException {
 
-        System.out.println("trying to find by " + userId);
         Optional<UserData> userDataFound = userStorageService.getById(userId);
-
-        if (userDataFound.isPresent()) {
-            System.out.println(userDataFound.get());
-        } else {
-            System.out.println("EMPTY OPTIONAL");
-        }
 
         return userDataFound.orElseThrow(
                 () -> new UserException(userServiceMessageHelper.getUserNotFound(userId),

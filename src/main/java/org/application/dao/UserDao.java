@@ -11,7 +11,7 @@ public interface UserDao {
 
     List<UserData> list();
 
-    void delete(Long id);
+    boolean delete(Long id);
 
     Optional<UserData> get(Long id);
 

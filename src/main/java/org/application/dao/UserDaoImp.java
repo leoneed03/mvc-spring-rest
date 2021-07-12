@@ -32,10 +32,19 @@ public class UserDaoImp implements UserDao {
 
     @Transactional
     @Override
-    public void delete(Long id) {
-        UserData userData = new UserData();
-        userData.setId(id);
-        sessionFactory.getCurrentSession().delete(userData);
+    public boolean delete(Long id) {
+
+        UserData userDataFound = sessionFactory.getCurrentSession().get(UserData.class, id);
+
+        if (userDataFound != null) {
+            sessionFactory.getCurrentSession().delete(userDataFound);
+
+            return true;
+
+        } else {
+
+            return false;
+        }
     }
 
     @Transactional
