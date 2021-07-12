@@ -63,6 +63,13 @@ public class UserDataController {
     public void updateUser(@PathVariable("id") Long userId,
                            @RequestBody UserData user) throws UserException {
 
+        if (userId == null) {
+
+            throw new UserException(
+                    userServiceMessageHelper.getNullIdMessage(),
+                    HttpStatus.BAD_REQUEST);
+        }
+
         if (user == null) {
 
             throw new UserException(
@@ -100,6 +107,12 @@ public class UserDataController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable("id") Long userId) throws UserException {
 
+        if (userId == null) {
+
+            throw new UserException(userServiceMessageHelper.getNullIdMessage(),
+                    HttpStatus.BAD_REQUEST);
+        }
+
         boolean userWasFound = userStorageService.deleteById(userId);
 
         if (!userWasFound) {
@@ -111,6 +124,12 @@ public class UserDataController {
 
     @GetMapping("/{id}")
     public UserData getUser(@PathVariable("id") Long userId) throws UserException {
+
+        if (userId == null) {
+
+            throw new UserException(userServiceMessageHelper.getNullIdMessage(),
+                    HttpStatus.BAD_REQUEST);
+        }
 
         Optional<UserData> userDataFound = userStorageService.getById(userId);
 

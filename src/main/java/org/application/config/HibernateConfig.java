@@ -13,24 +13,33 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScans(value = { @ComponentScan("com")})
 public class HibernateConfig {
 
+    private final ApplicationContext context;
+
     @Autowired
-    private ApplicationContext context;
+    public HibernateConfig(ApplicationContext context) {
+        this.context = context;
+    }
 
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {
+
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+
         factoryBean.setConfigLocation(context.getResource("classpath:hibernate.cfg.xml"));
         factoryBean.setAnnotatedClasses(UserData.class);
+
         return factoryBean;
     }
 
     @Bean
     public HibernateTransactionManager getTransactionManager() {
+
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+
         transactionManager.setSessionFactory(getSessionFactory().getObject());
+
         return transactionManager;
     }
 
