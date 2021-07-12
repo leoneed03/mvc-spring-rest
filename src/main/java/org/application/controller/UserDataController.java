@@ -1,6 +1,6 @@
 package org.application.controller;
 
-import org.application.entity.PersonValidator;
+import org.application.model.UserDataValidator;
 import org.application.exceptions.UserException;
 import org.application.model.UserData;
 import org.application.response.IdResponse;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Optional;
@@ -18,24 +17,32 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/userdata")
 public class UserDataController {
+    private final UserStorageService userStorageService;
+    private final UserDataValidator userDataValidator;
+    private final UserServiceMessageHelper userServiceMessageHelper;
+
     @Autowired
-    UserStorageService userStorageService;
-    @Autowired
-    PersonValidator personValidator;
-    @Autowired
-    UserServiceMessageHelper userServiceMessageHelper;
+    public UserDataController(UserStorageService userStorageService,
+                              UserDataValidator userDataValidator,
+                              UserServiceMessageHelper userServiceMessageHelper) {
+        this.userStorageService = userStorageService;
+        this.userDataValidator = userDataValidator;
+        this.userServiceMessageHelper = userServiceMessageHelper;
+    }
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public IdResponse saveUser(@RequestBody UserData user) throws UserException {
 
         if (user == null) {
+
             throw new UserException(
                     userServiceMessageHelper.getNullUserMessage(),
                     HttpStatus.BAD_REQUEST);
         }
 
-        if (!personValidator.isUserValidNoId(user)) {
+        if (!userDataValidator.isUserValidNoId(user)) {
+
             throw new UserException(userServiceMessageHelper.getInvalidUserParameters(),
                     HttpStatus.BAD_REQUEST);
         }
@@ -46,7 +53,7 @@ public class UserDataController {
 
         } catch (ValidationException constraintViolationException) {
 
-            throw new UserException(constraintViolationException.getMessage(),
+            throw new UserException(userServiceMessageHelper.getInvalidUserParameters(),
                     HttpStatus.BAD_REQUEST);
         }
     }
@@ -57,12 +64,13 @@ public class UserDataController {
                            @RequestBody UserData user) throws UserException {
 
         if (user == null) {
+
             throw new UserException(
                     userServiceMessageHelper.getNullUserMessage(),
                     HttpStatus.BAD_REQUEST);
         }
 
-        if (!personValidator.isUserValidNoId(user)) {
+        if (!userDataValidator.isUserValidNoId(user)) {
 
             throw new UserException(
                     userServiceMessageHelper.getInvalidUserParameters(),
@@ -78,7 +86,7 @@ public class UserDataController {
 
         } catch (ValidationException constraintViolationException) {
 
-            throw new UserException(constraintViolationException.getMessage(),
+            throw new UserException(userServiceMessageHelper.getInvalidUserParameters(),
                     HttpStatus.BAD_REQUEST);
         }
     }
@@ -95,6 +103,7 @@ public class UserDataController {
         boolean userWasFound = userStorageService.deleteById(userId);
 
         if (!userWasFound) {
+
             throw new UserException(userServiceMessageHelper.getUserNotFound(userId),
                     HttpStatus.BAD_REQUEST);
         }

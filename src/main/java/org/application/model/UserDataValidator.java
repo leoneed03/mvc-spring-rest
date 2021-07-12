@@ -1,10 +1,10 @@
-package org.application.entity;
+package org.application.model;
 
 import org.application.model.UserData;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PersonValidator {
+public class UserDataValidator {
 
     public boolean isUserValidNoId(UserData user) {
         return user.getId() == null

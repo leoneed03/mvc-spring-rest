@@ -1,12 +1,11 @@
-package org.application.dao;
+package org.application.repository;
 
-import org.application.exceptions.UserException;
 import org.application.model.UserData;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDao {
+public interface UserDataRepo {
     Long save(UserData user);
 
     List<UserData> list();

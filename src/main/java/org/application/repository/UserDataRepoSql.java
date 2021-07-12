@@ -1,4 +1,4 @@
-package org.application.dao;
+package org.application.repository;
 
 import org.application.model.UserData;
 import org.hibernate.SessionFactory;
@@ -11,10 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserDaoImp implements UserDao {
+public class UserDataRepoSql implements UserDataRepo {
+
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    private SessionFactory sessionFactory;
+    public UserDataRepoSql(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Transactional
     @Override
@@ -27,6 +31,7 @@ public class UserDaoImp implements UserDao {
     public List<UserData> list() {
         @SuppressWarnings("unchecked")
         TypedQuery<UserData> query = sessionFactory.getCurrentSession().createQuery("from UserData");
+
         return query.getResultList();
     }
 
@@ -37,6 +42,7 @@ public class UserDaoImp implements UserDao {
         UserData userDataFound = sessionFactory.getCurrentSession().get(UserData.class, id);
 
         if (userDataFound != null) {
+
             sessionFactory.getCurrentSession().delete(userDataFound);
 
             return true;
@@ -50,6 +56,7 @@ public class UserDaoImp implements UserDao {
     @Transactional
     @Override
     public Optional<UserData> get(Long id) {
+
         UserData userDataFound = sessionFactory.getCurrentSession().get(UserData.class, id);
 
         return Optional.ofNullable(userDataFound);
@@ -57,13 +64,15 @@ public class UserDaoImp implements UserDao {
 
     @Transactional
     @Override
-    public Optional<UserData> updateIfPresent(Long id, UserData user) {
+    public Optional<UserData> updateIfPresent(Long id,
+                                              UserData user) {
 
         user.setId(id);
 
         UserData userDataFound = sessionFactory.getCurrentSession().get(UserData.class, id);
 
         if (userDataFound != null) {
+
             userDataFound.setEmail(user.getEmail());
             userDataFound.setName(user.getName());
 

@@ -1,6 +1,6 @@
 package org.application.service;
 
-import org.application.dao.UserDao;
+import org.application.repository.UserDataRepo;
 import org.application.model.UserData;
 import org.application.response.IdResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class UserStorageService {
     @Autowired
-    private UserDao repo;
+    private UserDataRepo repo;
 
     public IdResponse saveUser(final UserData user) {
         return new IdResponse(repo.save(user));
@@ -30,7 +30,8 @@ public class UserStorageService {
         return repo.get(id);
     }
 
-    public Optional<UserData> updateIfPresent(final Long id, final UserData user) {
+    public Optional<UserData> updateIfPresent(final Long id,
+                                              final UserData user) {
         return repo.updateIfPresent(id, user);
     }
 }
