@@ -1,6 +1,5 @@
 package org.application.model;
 
-import org.application.model.UserData;
 import org.springframework.stereotype.Component;
 
 @Component

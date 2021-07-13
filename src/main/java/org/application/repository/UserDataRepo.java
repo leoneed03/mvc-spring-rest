@@ -1,18 +1,11 @@
 package org.application.repository;
 
 import org.application.model.UserData;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+@Repository
+public interface UserDataRepo extends JpaRepository<UserData, Long> {
 
-public interface UserDataRepo {
-    Long save(UserData user);
-
-    List<UserData> list();
-
-    boolean delete(Long id);
-
-    Optional<UserData> get(Long id);
-
-    Optional<UserData> updateIfPresent(Long id, UserData user);
+    Integer deleteUserDataById(Long id);
 }
