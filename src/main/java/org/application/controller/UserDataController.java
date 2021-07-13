@@ -1,9 +1,8 @@
 package org.application.controller;
 
-import org.application.model.UserDataValidator;
 import org.application.exceptions.UserException;
 import org.application.model.UserData;
-import org.application.response.IdResponse;
+import org.application.model.UserDataValidator;
 import org.application.service.UserServiceMessageHelper;
 import org.application.service.UserStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ public class UserDataController {
         this.userServiceMessageHelper = userServiceMessageHelper;
     }
 
-    //return whole user
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public UserData saveUser(@RequestBody UserData user) throws UserException {
@@ -60,11 +58,9 @@ public class UserDataController {
         }
     }
 
-    //return updated user
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateUser(@PathVariable("id") Long userId,
-                           @RequestBody UserData user) throws UserException {
+    public UserData updateUser(@PathVariable("id") Long userId,
+                               @RequestBody UserData user) throws UserException {
 
         if (userId == null) {
 
@@ -89,9 +85,9 @@ public class UserDataController {
 
         try {
 
-            userStorageService.updateIfPresent(userId, user).orElseThrow(
+            return userStorageService.updateIfPresent(userId, user).orElseThrow(
                     () -> new UserException(userServiceMessageHelper.getUserNotFound(userId),
-                            HttpStatus.BAD_REQUEST)
+                            HttpStatus.NOT_FOUND)
             );
 
         } catch (ValidationException constraintViolationException) {
@@ -107,7 +103,6 @@ public class UserDataController {
         return userStorageService.getAllUsers();
     }
 
-    //no content -- empty inside
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable("id") Long userId) throws UserException {
@@ -122,9 +117,8 @@ public class UserDataController {
 
         if (!userWasFound) {
 
-            //return not found or no content
             throw new UserException(userServiceMessageHelper.getUserNotFound(userId),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.NOT_FOUND);
         }
     }
 
@@ -141,7 +135,7 @@ public class UserDataController {
 
         return userDataFound.orElseThrow(
                 () -> new UserException(userServiceMessageHelper.getUserNotFound(userId),
-                        HttpStatus.BAD_REQUEST)
+                        HttpStatus.NOT_FOUND)
         );
     }
 }

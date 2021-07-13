@@ -4,46 +4,46 @@ import org.application.repository.UserDataRepo;
 import org.application.model.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
-@org.springframework.transaction.annotation.Transactional
 @Service
 public class UserStorageService {
-    @Autowired
-    private UserDataRepo repo;
+    private final UserDataRepo repo;
 
-    @Transactional
-    @org.springframework.transaction.annotation.Transactional
-    public UserData saveUser(final UserData user) {
-        UserData userSaved = repo.save(user);
-        repo.flush();
-        return userSaved;
+    @Autowired
+    public UserStorageService(UserDataRepo repo) {
+        this.repo = repo;
     }
 
+    @Transactional
+    public UserData saveUser(final UserData user) {
+        return repo.save(user);
+    }
+
+    @Transactional
     public List<UserData> getAllUsers() {
         return repo.findAll();
     }
 
-    @org.springframework.transaction.annotation.Transactional
     @Transactional
     public boolean deleteById(final Long id) {
-        System.out.println("Service delete by id = " + id);
 
-        UserData userData = new UserData();
-        userData.setId(id);
-        repo.delete(userData);
-        return true;
-//        return repo.deleteUserDataById(id) != null;
+        Integer userDeleted = repo.deleteUserDataById(id);
+
+        System.out.println("Deleted: " + userDeleted);
+
+        return userDeleted != 0;
     }
 
+    @Transactional
     public Optional<UserData> getById(final Long id) {
         return repo.findById(id);
     }
 
+    @Transactional
     public Optional<UserData> updateIfPresent(final Long id,
                                               final UserData user) {
         Optional<UserData> userDataFoundOpt = repo.findById(id);

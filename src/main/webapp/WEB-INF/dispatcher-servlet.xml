@@ -7,39 +7,7 @@
     <ctx:annotation-config/>
     <ctx:component-scan base-package="org.application"/>
     <mvc:annotation-driven/>
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-<!--        <property name="entityManagerFactory" ref="myEmf" />-->
-    </bean>
-    <tx:annotation-driven transaction-manager="transactionManager" />
-
-<!--    <provider>org.hibernate.ejb.HibernatePersistence</provider>-->
-    <jpa:repositories base-package="org.application" />
-
-<!--    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"-->
-<!--          destroy-method="close">-->
-<!--        <property name="driverClassName" value="org.postgresql.Driver" />-->
-<!--        <property name="url" value="jdbc:postgresql://localhost:5432/usersdb" />-->
-<!--        <property name="username" value="postgres" />-->
-<!--        <property name="password" value="postgres" />-->
-<!--    </bean>-->
-
-<!--    <bean id="entityManagerFactory"-->
-<!--          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">-->
-<!--        <property name="packagesToScan" value="org.application" />-->
-<!--        <property name="dataSource" ref="dataSource" />-->
-
-<!--        <property name="jpaProperties">-->
-<!--            <props>-->
-<!--                <prop key="hibernate.show_sql">true</prop>-->
-<!--                <prop key="hibernate.hbm2ddl.auto">update</prop>-->
-<!--                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL94Dialect</prop>-->
-<!--            </props>-->
-<!--        </property>-->
-
-<!--        <property name="persistenceProvider">-->
-<!--            <bean class="org.hibernate.jpa.HibernatePersistenceProvider"/>-->
-<!--        </property>-->
-
-<!--    </bean>-->
-
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <jpa:repositories base-package="org.application"/>
 </beans>
